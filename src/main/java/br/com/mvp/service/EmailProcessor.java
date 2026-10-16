@@ -3,8 +3,9 @@ package br.com.mvp.service;
 import br.com.mvp.model.EmailMessage;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jsoup.Jsoup;
-
 import java.nio.file.Path;
+import br.com.mvp.model.SegmentoLead;
+import br.com.mvp.model.IntencaoEmail;
 
 public class EmailProcessor {
 
@@ -26,6 +27,36 @@ public class EmailProcessor {
                 Jsoup.parse(
                         email.getBodyHtml()
                 ).text();
+
+        IntencaoAnalyzer intencaoAnalyzer = new IntencaoAnalyzer();
+
+        IntencaoEmail intencao = intencaoAnalyzer.analisar(
+                email.getSubject(),
+                corpoTexto
+        );
+
+        SegmentoAnalyzer segmentoAnalyzer = new SegmentoAnalyzer();
+
+        SegmentoLead segmento = segmentoAnalyzer.analisar(
+                email.getSenderEmail(),
+                email.getSubject(),
+                corpoTexto
+        );
+
+        DadosLeadExtractor dadosExtractor = new DadosLeadExtractor();
+
+        Integer quantidadeAlunos =
+                dadosExtractor.extrairQuantidadeAlunos(corpoTexto);
+
+
+        System.out.println("Intenção: " + intencao);
+        System.out.println("Segmento: " + segmento);
+        System.out.println(
+                "Quantidade de alunos: "
+                        + (quantidadeAlunos == null
+                        ? "Não informada"
+                        : quantidadeAlunos)
+        );
 
         System.out.println();
         System.out.println("==============================");
@@ -55,3 +86,4 @@ public class EmailProcessor {
         System.out.println("==============================");
     }
 }
+

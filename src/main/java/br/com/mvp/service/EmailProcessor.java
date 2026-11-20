@@ -6,6 +6,7 @@ import org.jsoup.Jsoup;
 import java.nio.file.Path;
 import br.com.mvp.model.SegmentoLead;
 import br.com.mvp.model.IntencaoEmail;
+import br.com.mvp.model.Lead;
 
 public class EmailProcessor {
 
@@ -48,14 +49,22 @@ public class EmailProcessor {
         Integer quantidadeAlunos =
                 dadosExtractor.extrairQuantidadeAlunos(corpoTexto);
 
+        Lead lead = new Lead(
+                email.getSenderEmail(),
+                intencao,
+                segmento,
+                quantidadeAlunos
+        );
 
-        System.out.println("Intenção: " + intencao);
-        System.out.println("Segmento: " + segmento);
+
+        System.out.println("Intenção: " + lead.getIntencao());
+        System.out.println("Segmento: " + lead.getSegmento());
+
         System.out.println(
                 "Quantidade de alunos: "
-                        + (quantidadeAlunos == null
+                        + (lead.getQuantidadeAlunos() == null
                         ? "Não informada"
-                        : quantidadeAlunos)
+                        : lead.getQuantidadeAlunos())
         );
 
         System.out.println();
